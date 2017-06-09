@@ -23,8 +23,40 @@ var proxyTable = config.dev.proxyTable
 var app = express()
 //拿到data文件,获得相关数据
 var appData=require('../data.json');
-var appseller=appData.seller;
+//获取数据中seller数据
+var seller=appData.seller;
+//获取商品信息
+var goods=appData.goods;
+//获取评价信息
+var ratings=appData.ratings;
+//定义路由
+var apiRoutes = express.Router();
 
+apiRoutes.get('/seller', function (req, res) {
+  res.json({
+    errno: 0,
+    data: seller
+  });
+});
+
+apiRoutes.get('/goods', function (req, res) {
+  res.json({
+    errno: 0,
+    data: goods
+  });
+});
+
+apiRoutes.get('/ratings', function (req, res) {
+  res.json({
+    errno: 0,
+    data: ratings
+  });
+});
+
+app.use('/api', apiRoutes);
+
+
+/*-------------------------------------------------------------*/
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

@@ -4,16 +4,16 @@
 
 <script>
 export default {
-  name: 'header',
+  name: 'v-header',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      
     }
   }
 }
 </script>
 
 <!-- scoped该样式只作用于该组件 -->
-<style scoped>
+<style scoped >
 
 </style>
