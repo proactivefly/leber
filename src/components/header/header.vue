@@ -17,13 +17,13 @@
   		   	  <span class='text'>{{seller.supports[0].description}}</span>
   		   </div>
   		</div>
-     <div v-if='seller.supports' class="support-count">
+     <div v-if='seller.supports' class="support-count" @click='showDetail'>
        <span class='count'>{{seller.supports.length}}个</span>
        <i class='icon-keyboard_arrow_right'></i>
      </div>
   	</div>
   	<!-- 公告 -->
-  	<div class='bulletin-wrapper'>
+  	<div class='bulletin-wrapper' @click='showDetail'>
       <span class='bulletin-title'></span><span class='bulletin-text'>{{seller.bulletin}}</span>
       <i class='icon-keyboard_arrow_right'></i>
     </div>
@@ -31,10 +31,43 @@
     <div class='background'>
       <img :src="seller.avatar" width='100%' height='100%'>
     </div>
+    <div class='detail clearfix' v-show='detailShow'>
+      <div class="detail-wrapper">
+        <div class="detail-main">
+          <h1 class='name'>{{seller.name}}</h1>
+          <div class='star-wrapper'>
+            <star :size='48' :score="seller.score"></star>
+          </div>
+          <div class='title'>
+            <div class='line'></div>
+            <div class="text">优惠信息</div>
+            <div class='line'></div>
+          </div>
+          <ul class="supports" v-if='seller.supports'>
+            <li v-for='(item,index) in seller.supports' class='support-item'>
+              <span class='icon' :class='classMap[seller.supports[index].type]'></span>
+              <span class='text'>{{seller.supports[index].description}}</span>
+            </li>
+          </ul>
+          <div class='title'>
+            <div class='line'></div>
+            <div class="text">商家公告</div>
+            <div class='line'></div>
+          </div>
+          <div class='bulletin'>
+            <p>{{seller.bulletin}}</p>
+          </div>
+        </div>
+      </div>
+      <div class='detail-close'>
+        <i class='icon-close' @click='closeDetail'></i>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import star from '@/components/star/star';
 export default {
   props:{ //接收父组件数据
   	seller:{
@@ -43,15 +76,26 @@ export default {
   },
   created(){
   	// console.log(this.seller)
-  	this.classMap=['decrease','discount','special','invoice','guatantee'];
+  	this.classMap=['decrease','discount','special','invoice','guarantee'];
   },
 
   name: 'v-header',
 
   data(){
     return {
-
+      detailShow:false
     }
+  },
+  methods:{
+    showDetail(){
+      this.detailShow=true
+    },
+    closeDetail(){
+      this.detailShow=false
+    }
+  },
+  components:{ //注册组件
+    star
   }
 }
 </script>
@@ -65,6 +109,7 @@ export default {
       color:#fff
       position:relative
       background:rgba(7,17,27,0.5)
+      overflow:hidden
       .content-wrapper
         padding:24px 12px 18px 24px
         font-size:0px
@@ -107,9 +152,9 @@ export default {
             background-repeat:no-repeat
             &.decrease
               bg-image("decrease_1")
-            &.decount
+            &.discount
               bg-image("discount_1")
-            &.guatantee
+            &.guartantee
               bg-image('guarantee_1')
             &.invoice
               bg-image('invoice_1')
@@ -154,7 +199,7 @@ export default {
           background-size:22px 12px
           background-repeat:no-repeat
           vertical-align:top
-          margin-top:7px
+          margin-top:8px
         .bulletin-text
           font-size:10px
           margin:0 4px
@@ -172,5 +217,91 @@ export default {
         height:100%
         z-index:-1
         filter:blur(10px)
-
+      /* sticky-footer */
+      .detail
+        position:fixed
+        top:0px
+        left:0px
+        z-index:100
+        width:100%
+        height:100%
+        overflow:auto
+        background:rgba(7,17,27,0.8)
+        .detail-wrapper
+          min-height:100%
+          width:100%
+          .detail-main
+            margin-top:64px
+            padding-bottom:64px
+            .name
+              font-size:18px
+              font-weight:700
+              color:rgb(255,255,255)
+              line-height:18px
+              text-align:center
+            .star-wrapper
+              text-align:center
+              margin-top:16px
+              padding:2px 0px
+            .title
+               display:flex
+               width:80%
+               margin:28px auto 24px auto
+               .line
+                  flex:1
+                  position:relative
+                  top:-6px
+                  border-bottom:1px solid rgba(255,255,255,0.2)
+               .text
+                  padding:0px 12px
+                  font-size:14px
+                  font-weight:700
+            .supports
+                width:80%
+                margin:0 auto
+                font-size:12px
+                line-height:12px
+                .supports-item
+                    padding:0 12px
+                    margin-bottom:12px
+                    font-size:0
+                    &:last-child
+                      margin-bottom:0
+                  .icon
+                      display:inline-block
+                      width:16px
+                      height:16px
+                      background-size:16px 16px
+                      background-repeat:no-repeat
+                      margin-right:6px
+                      margin-bottom:12px
+                      vertical-align:top
+                      &.decrease
+                        bg-image("decrease_2")
+                      &.discount
+                        bg-image("discount_2")
+                      &.guarantee
+                        bg-image('guarantee_2')
+                      &.invoice
+                        bg-image('invoice_2')
+                      &.special
+                        bg-image('special_2')
+                  .text
+                     font-size:12px
+                     line-height:16px
+                     vertical-align:top
+            .bulletin
+               width:80%
+               margin:0 auto
+               p
+                  padding:0 12px
+                  line-height:24px
+                  font-size:12px
+        .detail-close
+          position:relative
+          width:32px
+          height:32px
+          margin:-64px auto 0 auto
+          font-size:32px
+          clear:both
 </style>
