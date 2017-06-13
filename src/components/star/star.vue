@@ -49,7 +49,7 @@
 	}
 </script>
 
-<style lang='stylus' rel='stylusheet/stylus'>
+<style scoped lang="stylus" rel="stylesheet/stylus">
 
   @import '../../common/stylus/mixin';
 

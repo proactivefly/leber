@@ -22,7 +22,7 @@
        <i class='icon-keyboard_arrow_right'></i>
      </div>
   	</div>
-  	<!-- 公告 -->
+  	<!-- 横幅公告 -->
   	<div class='bulletin-wrapper' @click='showDetail'>
       <span class='bulletin-title'></span><span class='bulletin-text'>{{seller.bulletin}}</span>
       <i class='icon-keyboard_arrow_right'></i>
@@ -31,38 +31,41 @@
     <div class='background'>
       <img :src="seller.avatar" width='100%' height='100%'>
     </div>
-    <div class='detail clearfix' v-show='detailShow'>
-      <div class="detail-wrapper">
-        <div class="detail-main">
-          <h1 class='name'>{{seller.name}}</h1>
-          <div class='star-wrapper'>
-            <star :size='48' :score="seller.score"></star>
-          </div>
-          <div class='title'>
-            <div class='line'></div>
-            <div class="text">优惠信息</div>
-            <div class='line'></div>
-          </div>
-          <ul class="supports" v-if='seller.supports'>
-            <li v-for='(item,index) in seller.supports' class='support-item'>
-              <span class='icon' :class='classMap[seller.supports[index].type]'></span>
-              <span class='text'>{{seller.supports[index].description}}</span>
-            </li>
-          </ul>
-          <div class='title'>
-            <div class='line'></div>
-            <div class="text">商家公告</div>
-            <div class='line'></div>
-          </div>
-          <div class='bulletin'>
-            <p>{{seller.bulletin}}</p>
+    <!-- 商家详情 -->
+    <transition name='fade'>
+      <div class='detail' v-show='detailShow'>
+        <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <h1 class='name'>{{seller.name}}</h1>
+            <div class='star-wrapper'>
+              <star :size='48' :score="seller.score"></star>
+            </div>
+            <div class='title'>
+              <div class='line'></div>
+              <div class="text">优惠信息</div>
+              <div class='line'></div>
+            </div>
+            <ul class="supports" v-if='seller.supports'>
+              <li v-for='(item,index) in seller.supports' class='support-item'>
+                <span class='icon' :class='classMap[seller.supports[index].type]'></span>
+                <span class='text'>{{seller.supports[index].description}}</span>
+              </li>
+            </ul>
+            <div class='title'>
+              <div class='line'></div>
+              <div class="text">商家公告</div>
+              <div class='line'></div>
+            </div>
+            <div class='bulletin'>
+              <p>{{seller.bulletin}}</p>
+            </div>
           </div>
         </div>
+        <div class='detail-close'>
+          <i class='icon-close' @click='closeDetail'></i>
+        </div>
       </div>
-      <div class='detail-close'>
-        <i class='icon-close' @click='closeDetail'></i>
-      </div>
-    </div>
+    </transition>  
   </div>
 </template>
 
@@ -101,7 +104,7 @@ export default {
 </script>
 
 <!-- scoped该样式只作用于该组件 -->
-<style scoped lang='stylus' rel='stylusheet/stylus'>
+<style scoped lang="stylus" rel="stylesheet/stylus">
 
    @import "../../common/stylus/mixin";
    
@@ -227,6 +230,10 @@ export default {
         height:100%
         overflow:auto
         background:rgba(7,17,27,0.8)
+        /* 定义动画 */
+        transition:all 0.5s
+        &.fade-enter,&.fade-leave-active
+          opacity:0
         .detail-wrapper
           min-height:100%
           width:100%
