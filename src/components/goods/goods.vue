@@ -2,7 +2,7 @@
 	<div class='goods'>
 		<div class="menu-wrapper" ref='menuWrapper'>
 			<ul>
-				<li v-for='(item,index) in goods' class='menu-item' :class="{'current':currentIndex===index}">
+				<li v-for='(item,index) in goods' class='menu-item' :class="{'current':currentIndex===index}" @click="selectMenu(index,$event)">
 					<span class='text border-1px'>
 						<span v-show='item.type>0' class='icon' :class='classMap[item.type]'></span>{{item.name}}
 					</span>
@@ -59,15 +59,16 @@
 			this.classMap=['decrease','discount','special','invoice','guarantee'];
 			this.$http.get('/api/goods').then((response)=>{
 		        response=response.body;
-		        console.log(response);
+		        // console.log(response);
 		        if(response.errno===ERR_OK){
 		          this.goods=response.data;
-		          // console.log(this.goods)
-		          // dom更新之后调用滚动方法
+		          
+		          /*dom更新之后调用滚动方法*/ 
 		          this.$nextTick(()=>{
 		            //调用滚动方法
 		          	this._initScroll();
 		          	this._computerHeight();
+		          	// console.log(this.listHeight);
 		          })
 		          
 		        }
@@ -75,8 +76,10 @@
 		},
 		methods:{
 			_initScroll(){ //实例化滚动元素
-				console.log(this.$refs);
-				this.menuScroll=new BScroll(this.$refs.menuWrapper,{});//菜单
+				// console.log(this.$refs);
+				this.menuScroll=new BScroll(this.$refs.menuWrapper,{
+					click:true //click事件默认被阻止，开锁
+				});//菜单
 				this.foodsScroll=new BScroll(this.$refs.foodsWrapper,{
 					probeType:3 //监听foodsScroll滚动时的位置
 				});
@@ -90,7 +93,7 @@
 			// 动态关联菜单，高亮显示
 			_computerHeight(){
 				// 拿到class为food-list-hook的dom元素
-				let foodsList=this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+				let foodsList=this.$refs.foodsWrapper.getElementsByClassName('foods-list-hook');
 				let height=0;
 				this.listHeight.push(height);
 				for(let i=0;i<foodsList.length;i++){
@@ -102,9 +105,22 @@
 					this.listHeight.push(height);
 				}
 
+			},
+			selectMenu(index,event){
+				// 阻止pc端默认行为,event._constucted为betterScroll自己派发的事件
+				if(!event._constructed){
+					return
+				}
+				// 使右侧滚动到相应位置
+				let foodsList=this.$refs.foodsWrapper.getElementsByClassName('foods-list-hook');
+				// 拿到dom元素
+				let el=foodsList[index];
+				// 滚动到那个位置
+				this.foodsScroll.scrollToElement(el,300);
 			}
 		},
 		computed:{
+			// 计算当前滚动到的位置
 			currentIndex(){ //左侧当前索引
 				for(let i=0;i<this.listHeight.length;i++){
 					// 获得当前索引值高度
