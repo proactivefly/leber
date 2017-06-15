@@ -36,22 +36,24 @@
 				</li>
 			</ul>
 		</div>
+		<shopCart :deliveryPrice='seller.deliveryPrice' :minPrice='seller.minPrice'></shopCart>
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll';
+	import shopCart from '@/components/shopCart/shopCart'
 	const ERR_OK=0;
 	export default{
 		props:{
-			seller:{ //还会用到商家信息
+			seller:{ //App.vue组件中router-view传过来，还会用到商家信息
 				type:Object
 			}
 		},
 		data(){
 			return { //初始化商品信息
 				goods:[],
-				listHeight:[],
+				listHeight:[],//储存列表分割高度
 				scrollY:0
 			}
 		},
@@ -116,7 +118,7 @@
 				// 拿到dom元素
 				let el=foodsList[index];
 				// 滚动到那个位置
-				this.foodsScroll.scrollToElement(el,300);
+				this.foodsScroll.scrollToElement(el,500);
 			}
 		},
 		computed:{
@@ -134,6 +136,9 @@
 				};
 				return 0
 			}
+		},
+		components:{
+			shopCart
 		}
 	}
 </script>

@@ -16,7 +16,7 @@
       </div>
     </div>
     <!-- 组件内容 -->
-    <router-view></router-view>
+    <router-view :seller='seller'></router-view>
   </div>
 </template>
 
