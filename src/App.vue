@@ -36,7 +36,7 @@ export default {
   created(){ //创建vue后之后
     this.$http.get('/api/seller').then((response)=>{
         response=response.body;
-        console.log(response);
+        // console.log(response);
         if(response.errno===ERR_OK){
           this.seller=response.data;
         }

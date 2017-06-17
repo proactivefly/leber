@@ -11,9 +11,11 @@
 		</div>
 		<div class="foods-wrapper" ref='foodsWrapper'>
 			<ul>
+				<!-- 商品分类 -->
 				<li v-for='item in goods' class='foods-list foods-list-hook'>
 					<h1 class='title'>{{item.name}}</h1>
 					<ul>
+						<!--商品分类下的商品  -->
 						<li v-for='food in item.foods' class='food-item border-1px'>
 							<div class='icon'>
 								<img :src="food.icon" width='57' height='57'>
@@ -29,6 +31,9 @@
 									<span class='now'>￥{{food.price}}</span>
 									<span v-show='food.oldPrice' class='old'>￥{{food.oldPrice}}</span>
 								</div>
+								<div class="cartControlWrapper">
+									<cartControl :food="food"></cartControl>
+								</div>
 							</div>
 						</li>
 					</ul>
@@ -36,14 +41,17 @@
 				</li>
 			</ul>
 		</div>
-		<shopCart :deliveryPrice='seller.deliveryPrice' :minPrice='seller.minPrice'></shopCart>
+		<shopCart :deliveryPrice='seller.deliveryPrice' :minPrice='
+		seller.minPrice' :selectFoods='selectFoods'></shopCart> 
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll';
-	import shopCart from '@/components/shopCart/shopCart'
+	import shopCart from '@/components/shopCart/shopCart';
+	import cartControl from '@/components/cartControl/cartControl';
 	const ERR_OK=0;
+
 	export default{
 		props:{
 			seller:{ //App.vue组件中router-view传过来，还会用到商家信息
@@ -83,7 +91,8 @@
 					click:true //click事件默认被阻止，开锁
 				});//菜单
 				this.foodsScroll=new BScroll(this.$refs.foodsWrapper,{
-					probeType:3 //监听foodsScroll滚动时的位置
+					probeType:3, //监听foodsScroll滚动时的位置
+					click:true //click事件默认被阻止，开锁
 				});
 				// 为foodsScroll监听滚动事件，以便暴露位置pos
 				this.foodsScroll.on('scroll',(pos)=>{
@@ -135,10 +144,25 @@
 					}
 				};
 				return 0
+			},
+			selectFoods(){
+				let foods=[];
+				this.goods.forEach((good)=>{// 每一个商品类别
+					good.foods.forEach((food)=>{ //每一个商品
+					   //如果某个商品数量大于0,则添加该商品对象到数组foods中
+					   if(food.count>0){
+					   	 foods.push(food)
+					   }
+					})
+				});
+				// 返回foods给selectFoods
+				// console.log(foods);
+				return foods
 			}
 		},
 		components:{
-			shopCart
+			shopCart,
+			cartControl
 		}
 	}
 </script>
@@ -248,4 +272,9 @@
                   text-decoration:line-through
                   font-weight:700
                   vertical-align:middle
+              .cartControlWrapper
+                 position:absolute
+                 right:0px
+                 bottom:12px
+                 
 </style>
