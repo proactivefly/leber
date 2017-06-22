@@ -1,5 +1,6 @@
 <template>
 	<div class="cartControl">
+		<!-- 显示时触发动画 -->
 		<transition name='move'>
 			<div class="cartDecrease" v-show="food.count>0" @click="decrease($event)">
 				<span class="inner icon-remove_circle_outline"></span>
@@ -31,8 +32,10 @@
 					this.food.count=1;
 				}else{
 					this.food.count++
-				}
+				};
 				// console.log(this.food.count)
+				// 派发事件，向外传出dom对象（this.$root代表根）-----------------------------------------
+				this.$root.eventHub.$emit('cart.add', event.target);
 			},
 			decrease(event){
 				if(!event._constructed){

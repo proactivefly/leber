@@ -32,6 +32,7 @@
 									<span v-show='food.oldPrice' class='old'>￥{{food.oldPrice}}</span>
 								</div>
 								<div class="cartControlWrapper">
+									<!-- 添加删除按钮组件 -->
 									<cartControl :food="food"></cartControl>
 								</div>
 							</div>
@@ -41,6 +42,7 @@
 				</li>
 			</ul>
 		</div>
+		<!-- 购物车组件 -->
 		<shopCart :deliveryPrice='seller.deliveryPrice' :minPrice='
 		seller.minPrice' :selectFoods='selectFoods'></shopCart> 
 	</div>
@@ -82,7 +84,7 @@
 		          })
 		          
 		        }
-		    })
+		    });
 		},
 		methods:{
 			_initScroll(){ //实例化滚动元素
@@ -128,7 +130,7 @@
 				let el=foodsList[index];
 				// 滚动到那个位置
 				this.foodsScroll.scrollToElement(el,500);
-			}
+			},
 		},
 		computed:{
 			// 计算当前滚动到的位置

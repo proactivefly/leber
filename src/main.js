@@ -14,6 +14,9 @@ Vue.use(vueResource);
 /* eslint-disable no-new*/
 new Vue({
   el: '#app',
+  data: {
+    eventHub: new Vue()
+  },
   router, //导入路由配置
   template: '<App/>', 
   components: { App } //导入模板
