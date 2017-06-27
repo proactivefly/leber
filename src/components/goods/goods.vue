@@ -16,7 +16,7 @@
 					<h1 class='title'>{{item.name}}</h1>
 					<ul>
 						<!--商品分类下的商品  -->
-						<li v-for='food in item.foods' class='food-item border-1px'>
+						<li v-for='food in item.foods' class='food-item border-1px' @click='selectFood(food,$event)'>
 							<div class='icon'>
 								<img :src="food.icon" width='57' height='57'>
 							</div>
@@ -44,7 +44,8 @@
 		</div>
 		<!-- 购物车组件 -->
 		<shopCart :deliveryPrice='seller.deliveryPrice' :minPrice='
-		seller.minPrice' :selectFoods='selectFoods'></shopCart> 
+		seller.minPrice' :selectFoods='selectFoods'></shopCart>
+		<food :food="selectedFood" ref='food'></food>
 	</div>
 </template>
 
@@ -52,8 +53,8 @@
 	import BScroll from 'better-scroll';
 	import shopCart from '@/components/shopCart/shopCart';
 	import cartControl from '@/components/cartControl/cartControl';
+	import food from '@/components/food/food';
 	const ERR_OK=0;
-
 	export default{
 		props:{
 			seller:{ //App.vue组件中router-view传过来，还会用到商家信息
@@ -64,7 +65,8 @@
 			return { //初始化商品信息
 				goods:[],
 				listHeight:[],//储存列表分割高度
-				scrollY:0
+				scrollY:0,
+				selectedFood:{}
 			}
 		},
 		created(){
@@ -131,6 +133,17 @@
 				// 滚动到那个位置
 				this.foodsScroll.scrollToElement(el,500);
 			},
+			// 选中商品查看food的详情
+			selectFood(food,event){
+				// 阻止pc端默认行为,event._constucted为betterScroll自己派发的事件
+				if(!event._constructed){
+					return
+				};
+				// 把被选中的food保存在selectedFood中
+				this.selectedFood=food;
+				// 调用子组件方法show方法------------------------------------
+				this.$refs.food.show();
+			}
 		},
 		computed:{
 			// 计算当前滚动到的位置
@@ -164,7 +177,8 @@
 		},
 		components:{
 			shopCart,
-			cartControl
+			cartControl,
+			food
 		}
 	}
 </script>
@@ -278,5 +292,4 @@
                  position:absolute
                  right:0px
                  bottom:12px
-                 
 </style>
