@@ -16,29 +16,40 @@
       </div>
     </div>
     <!-- 组件内容 -->
-    <router-view :seller='seller'></router-view>
+    <keep-alive>
+      <router-view :seller='seller'></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
 //导入header组件，@代表src
 import header from '@/components/header/header.vue';
+
+import {urlParse} from "@/common/js/util.js";
 const ERR_OK=0;
 export default {
   name: 'app',
-
   data(){
     return{
-      seller:{}
+      seller:{
+        id:(()=>{
+          let queryParam=urlParse();
+          // console.log(queryParam.id);
+          return queryParam.id;
+        })()
+      }
     }
   },
 
   created(){ //创建vue后之后
-    this.$http.get('/api/seller').then((response)=>{
+    this.$http.get('/api/seller?id='+this.seller.id).then((response)=>{
         response=response.body;
         // console.log(response);
         if(response.errno===ERR_OK){
-          this.seller=response.data;
+          // 三个参数。最终返回的结果，在id的基础上，添加response.data数据，然后赋值给空对象
+          this.seller=Object.assign({},this.seller,response.data);
+          console.log(this.seller.id);
         }
     })
   },

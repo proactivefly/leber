@@ -40,7 +40,7 @@
 							<!-- 循环评论列表 -->
 							<li v-for='rating in food.ratings' class='rating-item' v-show="needShow(rating.rateType,rating.text)">
 								<div>
-									<span class="time">{{rating.rateTime}}</span>
+									<span class="time">{{rating.rateTime|formatDate}}</span>
 									<div class='user'>
 										<span class="username">{{rating.username}}</span>
 										<img :src="rating.avatar" alt="" width='12' height='12'>
@@ -70,6 +70,8 @@
 	import split from '@/components/split/split';
 	import ratingSelect from '@/components/ratingSelect/ratingSelect';
 	import Vue from 'vue';
+	// 调用date.js中formdate方法
+	import {formatDate} from "@/common/js/date.js";
 	export default{
 		props:{
 			food:{
@@ -80,7 +82,7 @@
 			return{
 				showFlag:false, //控制food页面显示和隐藏
 				selectType:ALL, //控制评价选项切换
-				onlyContent:true, //控制评价内容显示隐藏
+				onlyContent:false, //控制评价内容显示隐藏
 				desc:{ //为了不写死内容
 					all:'全部',
 					positive:'推荐',
@@ -89,12 +91,9 @@
 			}
 		},
 		created(){
-			this.$root.eventHub.$on('updateSelectType',(newType) => {
-				this.selectType=newType;
-			});
-			this.$root.eventHub.$on('updateOnlyContent',(newContent)=>{
-				this.onlyContent=newContent;
-			})
+			// 父组件接收到子组件的数据变化时，修改自身数据，第二个参数是methods中事件名--------------------
+			this.$root.eventHub.$on('updateSelectType',this.updateSelectType);
+			this.$root.eventHub.$on('updateOnlyContent',this.updateOnlyContent);
 		},
 		methods:{
 			// 父组件可以调用子组件的方法，反之不可以
@@ -102,7 +101,7 @@
 				this.showFlag=true;
 				// 组件在多个地方使用，所以每次都要初始化，把评论制为all，onlyContent设置为true
 				this.selectType=ALL;
-				this.onlyContent=true;
+				this.onlyContent=false;
 				// 页面被展示了，初始化better-scroll
 				// nextTick保证dom被渲染
 				this.$nextTick(()=>{
@@ -129,23 +128,37 @@
 				this.food.count=1
 			},
 			needShow(type,text){
-				// 如果只有要显示有内容的，且 没有文本时
+				// 如果只有要显示有内容的，且 该条没有文本时就隐藏
 				if(this.onlyContent && !text){
 					return false
 				};
 				// 过了上一条，且选择的全部显示
 				if(this.selectType===ALL){
 					return true;
-				}else{ //否则评价类型要与选中的条件一致时才显示
+				}else{ //否则判断当前条评价  是否  和用户选的评级类型相等，相等为true显示，不相等false不显示
 					return type===this.selectType;
 				}
 			},
-
+			// 更改状态----------------------------------
+			updateSelectType(newType){
+				this.selectType=newType;
+			},
+			updateOnlyContent(newContent){
+				this.onlyContent=newContent;
+			}
 		},
 		components:{
 			cartControl,
 			split,
 			ratingSelect
+		},
+		filters:{
+			formatDate(time){
+				//把毫秒数——>中国标准时间  形如Thu Jun 29 2017 21:23:54 GMT+0800 (中国标准时间)
+				let date=new Date(time);
+				// 定义通用方法
+				return formatDate(date,'yyyy-MM-dd hh:mm');
+			}
 		}
 	}
 </script>

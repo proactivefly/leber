@@ -45,6 +45,7 @@
 		<!-- 购物车组件 -->
 		<shopCart :deliveryPrice='seller.deliveryPrice' :minPrice='
 		seller.minPrice' :selectFoods='selectFoods'></shopCart>
+		<!-- 具体食物组件 -->
 		<food :food="selectedFood" ref='food'></food>
 	</div>
 </template>

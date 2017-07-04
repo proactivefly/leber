@@ -157,7 +157,7 @@ export default {
               bg-image("decrease_1")
             &.discount
               bg-image("discount_1")
-            &.guartantee
+            &.guarantee
               bg-image('guarantee_1')
             &.invoice
               bg-image('invoice_1')

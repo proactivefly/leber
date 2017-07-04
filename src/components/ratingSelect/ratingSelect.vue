@@ -65,19 +65,20 @@
 				if(!event._constructed){
 					return
 				};
+				// 控制active状态切换，数值不同，不同按钮挂上class
 				this.typeNumber=type;
-				// console.log(this.typeNumber);
+				console.log(this.typeNumber);
 				// 通知父组件状态发生变化
 				this.$root.eventHub.$emit('updateSelectType', this.typeNumber);
-				this.$root.eventHub.$emit('updateOnlyContent', this.onlyContentPro);
 			},
 			toggleContent(){
 				// 阻止pc端默认行为,event._constucted为betterScroll自己派发的事件
 				if(!event._constructed){
 					return
 				};
-				this.onlyContentPro=!this.onlyContentPro
+				this.onlyContentPro=!this.onlyContentPro;
 				// 通知父组件
+				this.$root.eventHub.$emit('updateOnlyContent', this.onlyContentPro);
 			}
 		}
 	}
